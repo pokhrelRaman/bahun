@@ -18,6 +18,19 @@ public class fire2 : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log("OnCollisionEnter2D");
+        print(col.gameObject.name);
+        if(col.gameObject.name == "Player")
+        {
+            PlayerMovement.instance.playerHealth();
+            Destroy(gameObject);
+        }
+
+        if (col.gameObject.name == "Enemy")
+        {
+            enemyfire.instance.enemyHealth();
+            Destroy(gameObject);
+        }
+
+
     }
 }

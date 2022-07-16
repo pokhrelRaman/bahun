@@ -14,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     public float jumpingPower = 5f;
     public static bool isFacingRight = true;
 
+    public int health = 100;
+
+
 
     public Transform firepoint;
     public GameObject defaultShot,defaultShot2;
@@ -21,9 +24,19 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator anim;
     private bool checkjump,checkshoot;
+    public Vector3 treepos;
 
 
     public float defaultSpeed;
+
+
+    public static PlayerMovement instance;
+    public GameObject tree;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Update()
     {
@@ -36,14 +49,6 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
         anim.SetFloat("speed", Mathf.Abs(horizontal));
-        if(checkjump != true)
-        {
-            anim.SetBool("Jump", false);
-        }
-        if(checkshoot != true)
-        {
-            anim.SetBool("Attack", false);
-        }
         
     }
 
@@ -59,7 +64,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
             anim.SetBool("Jump", true);
-            checkjump = true;
+            
+        }
+        if (context.canceled)
+        {
+            anim.SetBool("Jump", false);
         }
 
         
@@ -79,8 +88,12 @@ public class PlayerMovement : MonoBehaviour
                 
             }
             anim.SetBool("attack", true);
-            checkshoot = true;
             
+            
+        }
+        if (context.canceled)
+        {
+            anim.SetBool("attack", false);
         }
     }
 
@@ -114,10 +127,33 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         speedfin = speed;
-        horizontal = context.ReadValue<Vector2>().x;
-        
+        horizontal = context.ReadValue<Vector2>().x;    
     }
-     
+    public void ins1(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            print("orin");
+            Instantiate(tree, tree.transform.position, tree.transform.rotation);
+        }
+    }
+
+    public GameObject particle,canva;
+    
+   public void playerHealth()
+    {
+        print(health);
+        
+            health -= 50;
+   
+
+        if(health <= 0)
+        {
+            //particle.SetActive(true);
+            //canva.SetActive(true);
+            print("playerDied");
+        }
+    }
 
 
 
